@@ -1,15 +1,21 @@
 import pandas as pd
 
-AWS_BUCKET_PATH = "s3://wagon-public-datasets/taxi-fare-train.csv"
+from TaxiFareModel.utils import simple_time_tracker
+from google.cloud import storage
+from TaxiFareModel.params import BUCKET_NAME, BUCKET_TRAIN_DATA_PATH
 
 
-def get_data(nrows=10_000):
-    '''returns a DataFrame with nrows from s3 bucket'''
-    df = pd.read_csv(AWS_BUCKET_PATH, nrows=nrows)
+@simple_time_tracker
+def get_data_from_gcp(nrows=10000, optimize=False, **kwargs):
+    """method to get the training data (or a portion of it) from google cloud bucket"""
+    # Add Client() here
+    client = storage.Client()
+    path = f"gs://{BUCKET_NAME}/{BUCKET_TRAIN_DATA_PATH}"
+    df = pd.read_csv(path, nrows=nrows)
     return df
 
-
 def clean_data(df, test=False):
+    df = df.drop(axis=1, columns=["Unnamed: 0"])
     df = df.dropna(how='any', axis='rows')
     df = df[(df.dropoff_latitude != 0) | (df.dropoff_longitude != 0)]
     df = df[(df.pickup_latitude != 0) | (df.pickup_longitude != 0)]

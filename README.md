@@ -1,74 +1,44 @@
-# Data analysis
-- Document here the project: TaxiFareModel
-- Description: Project Description
-- Data Source:
-- Type of analysis:
+# Hyperparameters tuning
+Finally, once you are satisfied with your features engineering work, **let's fine tune your model.**
 
-Please document the project the better you can.
+For this, we recommend you choosing a `Gradient Boosting Tree` estimator ([Xgboost](https://xgboost.readthedocs.io/en/latest/get_started.html) or [LightGBM](https://lightgbm.readthedocs.io/en/latest/) or [GradientBoostingRegressor](https://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingRegressor.html)).
 
-# Startup the project
+The idea is to tune the hyperparameters of this estimator. The most important parameters to tune are:
+- `learning_rate`
+- `max_depth`
+- `n_estimators`
 
-The initial setup.
+# Prerequisite
+Please keep in mind that the `save_model` method saves locally your model under the `model.joblib` file.
 
-Create virtualenv and install the project:
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv ~/venv ; source ~/venv/bin/activate ;\
-    pip install pip -U; pip install -r requirements.txt
-```
+You may want to upload to **Google Cloud Storage** the different trained models in separate bucket directories in order to save them. In order to do that, you may have a look at the content of the `gcp.py` file.
 
-Unittest test:
-```bash
-make clean install test
-```
+You will later load your best performing model to submit your predictions to Kaggle.
 
-Check for TaxiFareModel in gitlab.com/{group}.
-If your project is not set please add it:
 
-- Create a new project on `gitlab.com/{group}/TaxiFareModel`
-- Then populate it:
+# Reminder on Hyperparameter tuning
+To perform hyperparameters search, you have the choice between three `search` mechanisms:
+- [GridSearch](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.GridSearchCV.html)
+👉 Run all pipeline for each parameter combination
+➕ Exaustive
+➖ Very slow on large datasets
+- [RandomSearch](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html)
+👉 Run pipeline for a random subset of parameter combinations
+➕ Faster than Gridsearch for large dataset
+➖ Not exhaustive, might not find optimal parameter combination
+- [Hyperopt](http://hyperopt.github.io/hyperopt/)
+👉 Bayesian optimization technique that uses information from past trials to inform the next set of hyperparameters to explore
+➕ Faster than Gridsearch
+➕ Exhaustive and going through all parameter space
+➕ Often leading to better results
 
-```bash
-##   e.g. if group is "{group}" and project_name is "TaxiFareModel"
-git remote add origin git@github.com:{group}/TaxiFareModel.git
-git push -u origin master
-git push -u origin --tags
-```
 
-Functionnal test with a script:
+## Useful links
+- [XGboost hyperparameters](https://xgboost.readthedocs.io/en/latest/parameter.html)
 
-```bash
-cd
-mkdir tmp
-cd tmp
-TaxiFareModel-run
-```
+#### Exercise
+- First, try to adjust the hyperparameters manually and do a few runs that you can track with MLFlow. Then [with MLFlow UI you can visually see how these parameters affect the performance metric](https://mlflow.org/docs/latest/tracking.html#visualizing-metrics).
+- Once you have an idea of how the parameters impact RMSE, try to implement both  `RandomSearch` as part of your pipeline to fully tune the model.
 
-# Install
-
-Go to `https://github.com/{group}/TaxiFareModel` to see the project, manage issues,
-setup you ssh public key, ...
-
-Create a python3 virtualenv and activate it:
-
-```bash
-sudo apt-get install virtualenv python-pip python-dev
-deactivate; virtualenv -ppython3 ~/venv ; source ~/venv/bin/activate
-```
-
-Clone the project and install it:
-
-```bash
-git clone git@github.com:{group}/TaxiFareModel.git
-cd TaxiFareModel
-pip install -r requirements.txt
-make clean install test                # install and test
-```
-Functionnal test with a script:
-
-```bash
-cd
-mkdir tmp
-cd tmp
-TaxiFareModel-run
-```
+## Final Step
+Once you are satisfied with your tuned model, keep preciously your last `model.joblib`, and you can submit your new submissions on kaggle

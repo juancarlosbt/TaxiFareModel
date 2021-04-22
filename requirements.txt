@@ -1,29 +1,22 @@
-# packaging
 pip>=9
 setuptools>=26
-twine
 wheel>=0.29
-
-# data science
-numpy
 pandas
-scikit-learn
-
-# tests/linter
-black
+pytest
 coverage
 flake8
-pytest
+black
 yapf
-
-# API
-gcsfs
-google-cloud-storage
-mlflow
-s3fs
-
-# utilities
-six>=1.14
+python-gitlab
+twine
+six==1.14.0
+numpy==1.18.5
+pandas
+scikit-learn==0.22
 joblib
 memoized-property
+mlflow
+s3fs
+gcsfs
+google-cloud-storage
 termcolor
